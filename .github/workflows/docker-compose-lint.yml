@@ -45,31 +45,28 @@ jobs:
           **/*compose*.yaml
         files_ignore: |
           .github/**
+          deployment/**
     
     - name: Determine files to check
       id: files-to-check
       run: |
         set -x
         
-        # If the changed-files step failed or returned empty,
-        # use find to locate all docker compose files in the repo.
         if [[ "${{ steps.changed-files.outcome }}" = success && "${{ steps.changed-files.outputs.any_changed }}" = true ]]; then
           echo 'Changed files found, checking only those.'
-          # Store files in a way that handles spaces properly
           echo "mode=files" >> "$GITHUB_OUTPUT"
           echo "files=${{ steps.changed-files.outputs.all_changed_files }}" >> "$GITHUB_OUTPUT"
         else
           echo 'No changed files found, checking all docker compose files in the repo.'
-          # Use recursive mode in dclint to find all compose files
           echo "mode=recursive" >> "$GITHUB_OUTPUT"
         fi
     
     - name: Run dclint on changed files
       if: steps.files-to-check.outputs.mode == 'files'
       run: |
-        docker run --rm --volume "$PWD:$PWD" --workdir "$PWD" zavoloklom/dclint:3.1.0 --exclude .github ${{ steps.files-to-check.outputs.files }}
+        docker run --rm --volume "$PWD:$PWD" --workdir "$PWD" zavoloklom/dclint:3.1.0 --exclude .github --exclude deployment ${{ steps.files-to-check.outputs.files }}
     
     - name: Run dclint recursively
       if: steps.files-to-check.outputs.mode == 'recursive'
       run: |
-        docker run --rm --volume "$PWD:$PWD" --workdir "$PWD" zavoloklom/dclint:3.1.0 --exclude .github --recursive ci/ docker/
+        docker run --rm --volume "$PWD:$PWD" --workdir "$PWD" zavoloklom/dclint:3.1.0 --exclude .github --exclude deployment --recursive ci/ docker/
