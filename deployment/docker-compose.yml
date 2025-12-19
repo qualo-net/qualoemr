@@ -1,14 +1,13 @@
+version: '3.8'
+
 services:
   mysql:
     restart: always
     image: mariadb:11.8
-    command: ['mariadbd','--character-set-server=utf8mb4','--ssl-ca=/etc/ssl/ca.pem','--ssl_cert=/etc/ssl/server-cert.pem','--ssl_key=/etc/ssl/server-key.pem']
+    command: ['mariadbd','--character-set-server=utf8mb4']
     ports:
     - 8320:3306
     volumes:
-    - ../library/sql-ssl-certs-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
-    - ../library/sql-ssl-certs-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
-    - ../library/sql-ssl-certs-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
     - databasevolume:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -24,6 +23,7 @@ services:
       interval: 1m
       timeout: 5s
       retries: 3
+
   openemr:
     restart: always
     image: openemr/openemr:flex
@@ -31,8 +31,6 @@ services:
     - 8300:80
     - 9300:443
     volumes:
-    - ../..:/openemr:ro
-    - ../..:/var/www/localhost/htdocs/openemr:rw
     - assetvolume:/var/www/localhost/htdocs/openemr/public/assets:rw
     - themevolume:/var/www/localhost/htdocs/openemr/public/themes:rw
     - sitesvolume:/var/www/localhost/htdocs/openemr/sites:rw
@@ -40,7 +38,6 @@ services:
     - vendordir:/var/www/localhost/htdocs/openemr/vendor:rw
     - ccdanodemodules:/var/www/localhost/htdocs/openemr/ccdaservice/node_modules:rw
     - logvolume:/var/log
-    - couchdbvolume:/couchdb/data
     environment:
       DEBUG_COLORS: "true"
       TERM: xterm-256color
@@ -57,8 +54,6 @@ services:
       XDEBUG_ON: 1
       XDEBUG_PROFILER_ON: 1
       XDEBUG_CLIENT_HOST: host.docker.internal
-      GITHUB_COMPOSER_TOKEN: c313de1ed5a00eb6ff9309559ec9ad01fcc553f0
-      GITHUB_COMPOSER_TOKEN_ENCODED: ZWU5YWIwZWNiM2ZlN2I4YThlNGQ0ZWZiNjMyNDQ5MjFkZTJhMTY2OQo=
       SELENIUM_USE_GRID: "true"
       SELENIUM_HOST: selenium
       SELENIUM_FORCE_HEADLESS: "false"
@@ -107,6 +102,7 @@ services:
       interval: 1m
       timeout: 5s
       retries: 3
+
   selenium:
     restart: always
     image: selenium/standalone-chromium:4.39.0
@@ -127,9 +123,10 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
   phpmyadmin:
     restart: always
-    image: phpmyadmin
+    image: phpmyadmin:latest
     ports:
     - 8310:80
     environment:
@@ -137,29 +134,25 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+
   couchdb:
     restart: always
-    image: couchdb
+    image: couchdb:latest
     ports:
     - 5984:5984
     - 6984:6984
     volumes:
-    - ../library/couchdb-config-ssl-cert-keys/local.ini:/opt/couchdb/etc/local.ini:rw
-    - ../library/couchdb-config-ssl-cert-keys/easy/ca.pem:/etc/ssl/ca.pem:ro
-    - ../library/couchdb-config-ssl-cert-keys/easy/server-cert.pem:/etc/ssl/server-cert.pem:ro
-    - ../library/couchdb-config-ssl-cert-keys/easy/server-key.pem:/etc/ssl/server-key.pem:ro
     - couchdbvolume:/opt/couchdb/data
     environment:
       COUCHDB_USER: admin
       COUCHDB_PASSWORD: password
+
   openldap:
     restart: always
     image: openemr/dev-ldap:easy
     environment:
       LDAP_TLS_VERIFY_CLIENT: try
-      LDAP_TLS_CA_CRT_FILENAME: ca.pem
-      LDAP_TLS_CRT_FILENAME: server-cert.pem
-      LDAP_TLS_KEY_FILENAME: server-key.pem
+
   mailpit:
     restart: unless-stopped
     image: axllent/mailpit:latest
@@ -179,6 +172,7 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+
 volumes:
   databasevolume: {}
   assetvolume: {}
