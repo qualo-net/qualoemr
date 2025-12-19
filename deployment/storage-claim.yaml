@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: databasevolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 50Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: couchdbvolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: assetvolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: themevolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sitesvolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: logvolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ccdanodemodules
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nodemodules
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: vendordir
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mailpitvolume
+  namespace: openemr
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: on-prem-storage
+  resources:
+    requests:
+      storage: 1Gi

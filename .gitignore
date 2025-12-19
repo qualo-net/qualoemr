@@ -31,3 +31,7 @@ coverage/js-unit
 
 # phpstan
 tmp-phpstan/*
+
+#qualo deployment
+deployment/.env
+deployment/k8s-manifests/
